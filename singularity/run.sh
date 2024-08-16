@@ -21,4 +21,9 @@ else
    fi
 fi
 
-singularity run --bind ${HOME}/rstudio:/home/rstudio ${IMG}
+if (( $# == 0 )); then
+   singularity run --bind ${HOME}/rstudio:/home/rstudio ${IMG}
+else
+   singularity run --bind ${HOME}/rstudio:/home/rstudio,$1 ${IMG}
+fi
+
