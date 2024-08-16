@@ -15,6 +15,7 @@ From: rocker/verse:4.4.1
 
 %environment
   export PATH=/usr/lib/rstudio-server/bin:${PATH}
+  export PATH=/miniconda3/bin:$PATH
 
 # During the build process, commands in the %setup section are first executed
 # on the host system outside of the container after the base OS has been
@@ -52,8 +53,20 @@ From: rocker/verse:4.4.1
     # for BPCells
     apt install -y libhdf5-dev
 
+    # for conda
+    apt-get install -y automake build-essential bzip2 wget git default-jre unzip
+
+    # Install miniconda 
+    wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+    bash Miniconda3-latest-Linux-x86_64.sh -b -f -p /miniconda3/
+    rm Miniconda3-latest-Linux-x86_64.sh
+    export PATH="/miniconda3/bin:$PATH"
+
+    conda create -n py3.10 python=3.10.14 anaconda
+    # Help conda resolving Python "import" 
+    conda update --all
+
     # Install R packages
-    # R -e 'install.packages(c("BiocManager", "remotes"))'
     R -e 'install.packages(c("renv"))'
 
     # Set user package directory to /tmp if you want to prevent package collison
