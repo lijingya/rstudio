@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-IMG=./rstudio_server_verse_4.3.2.sif
+IMG=./rstudio_server_verse_4.4.1.sif
 
 if [[ ! -e ${IMG} ]]; then
    >&2 echo ${IMG} not found
