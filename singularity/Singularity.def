@@ -53,7 +53,8 @@ From: rocker/verse:4.4.1
     apt install -y libhdf5-dev
 
     # Install R packages
-    R -e 'install.packages(c("BiocManager", "remotes"))'
+    # R -e 'install.packages(c("BiocManager", "remotes"))'
+    R -e 'install.packages(c("renv"))'
 
     # Set user package directory to /tmp if you want to prevent package collison
     # mkdir -p /home/rstudio_session
