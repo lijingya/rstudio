@@ -53,6 +53,9 @@ From: rocker/verse:4.4.1
     # for BPCells
     apt install -y libhdf5-dev
 
+    # for 
+    apt install -y libproj-dev
+
     # for conda
     apt-get install -y automake build-essential bzip2 wget git default-jre unzip
 
@@ -65,7 +68,7 @@ From: rocker/verse:4.4.1
     conda create -n py3.10 python=3.10.14 anaconda
     # Use conda to install pip
     conda install -y -c conda-forge pip   
-    
+
     # Help conda resolving Python "import" 
     conda update --all
 
