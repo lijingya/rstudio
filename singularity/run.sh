@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
 IMG=./rstudio_server_verse_4.4.1.sif
+args=("$@")
+IFS=","
+mounts="${args[*]}"
 
 if [[ ! -e ${IMG} ]]; then
    >&2 echo ${IMG} not found
@@ -24,6 +27,6 @@ fi
 if (( $# == 0 )); then
    singularity run --bind ${HOME}/rstudio:/home/rstudio ${IMG}
 else
-   singularity run --bind ${HOME}/rstudio:/home/rstudio,$1 ${IMG}
+   singularity run --bind ${HOME}/rstudio:/home/rstudio,${mounts} ${IMG}
 fi
 
