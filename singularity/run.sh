@@ -2,8 +2,10 @@
 
 IMG=./rstudio_server_verse_4.4.1.sif
 args=("$@")
+old_IFS=$IFS
 IFS=","
 mounts="${args[*]}"
+IFS=$old_IFS
 
 if [[ ! -e ${IMG} ]]; then
    >&2 echo ${IMG} not found
