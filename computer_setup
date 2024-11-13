@@ -1,0 +1,66 @@
+# Set up 
+## Necessary softwares
+- VScode
+- iterm2
+
+### Set up iterm2
+```
+# Install brew
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# Install zsh
+brew install zsh
+
+# Install oh-my-zsh
+# https://catalins.tech/improve-mac-terminal/
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+# Generate ssh key
+ssh-keygen -t rsa
+ssh-copy-id user@server
+```
+
+### Set up env
+```
+mkdir -p ~/miniconda3
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
+bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
+rm -rf ~/miniconda3/miniconda.sh
+```
+
+### Install Quarto
+```
+wget https://github.com/quarto-dev/quarto-cli/releases/download/v1.5.56/quarto-1.5.56-linux-amd64.tar.gz
+mkdir ~/opt
+tar -C ~/opt -xvzf quarto-1.5.56-linux-amd64.tar.gz
+```
+
+### Set up singularity
+https://docs.sylabs.io/guides/latest/admin-guide/installation.html#installation-on-linux
+install singularity-ce
+
+# renv gitignore
+```
+library/
+local/
+cellar/
+lock/
+python/
+sandbox/
+staging/
+results/
+data/
+
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+.venv
+
+.html
+```
+
+
+
+
+
