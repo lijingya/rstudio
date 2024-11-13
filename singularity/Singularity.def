@@ -75,6 +75,11 @@ From: rocker/verse:4.4.1
     # Install R packages
     R -e 'install.packages(c("renv"))'
 
+    # Install quarto
+    wget https://github.com/quarto-dev/quarto-cli/releases/download/v1.5.56/quarto-1.5.56-linux-amd64.tar.gz
+    mkdir ~/opt
+    tar -C ~/opt -xvzf quarto-1.5.56-linux-amd64.tar.gz
+
     # Set user package directory to /tmp if you want to prevent package collison
     # mkdir -p /home/rstudio_session
     # printf 'R_LIBS_USER="/home/rstudio_session"\n' >> /usr/local/lib/R/etc/Renviron.site
