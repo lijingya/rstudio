@@ -1,0 +1,82 @@
+# Base image
+FROM rocker/verse:4.4.3
+
+# Environment variables
+ENV PATH="/usr/lib/rstudio-server/bin:${PATH}"
+ENV PATH="/miniconda3/bin:${PATH}"
+
+# Copy custom RStudio scripts into image
+COPY rstudio_auth.sh /usr/lib/rstudio-server/bin/rstudio_auth
+COPY launch_rserver.sh /usr/lib/rstudio-server/bin/launch_rserver
+RUN chmod +x /usr/lib/rstudio-server/bin/rstudio_auth \
+    && chmod +x /usr/lib/rstudio-server/bin/launch_rserver
+
+
+# Install Shiny Server
+
+RUN R -e 'install.packages("shiny", repos="https://cran.rstudio.com/")' && \
+    apt-get install gdebi-core && \
+    wget https://download3.rstudio.org/ubuntu-20.04/x86_64/shiny-server-1.5.23.1030-amd64.deb && \
+    gdebi -n shiny-server-1.5.23.1030-amd64.deb && \
+    rm shiny-server-1.5.23.1030-amd64.deb
+
+
+# Install system packages and Miniconda
+RUN apt update && apt upgrade -y && \
+    apt install -y \
+        glpk-utils \
+        libglpk-dev \
+        libicu-dev \
+        libhdf5-dev \
+        libproj-dev \
+        automake \
+        build-essential \
+        bzip2 \
+        wget \
+        git \
+        default-jre \
+        unzip
+
+# Install Miniconda
+RUN wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+    bash Miniconda3-latest-Linux-x86_64.sh -b -f -p /miniconda3 && \
+    rm Miniconda3-latest-Linux-x86_64.sh && \
+    \
+    # Set conda environment and install packages
+    /miniconda3/bin/conda create -n py3.10 python=3.10.14 anaconda -y && \
+    /miniconda3/bin/conda install -n py3.10 -y -c conda-forge pip && \
+    /miniconda3/bin/conda update -n py3.10 --all -y 
+
+# Install R packages
+RUN R -e 'install.packages(c("renv"))'
+
+# Install Quarto
+RUN wget https://github.com/quarto-dev/quarto-cli/releases/download/v1.5.56/quarto-1.5.56-linux-amd64.tar.gz && \
+    mkdir -p /opt/quarto && \
+    tar -C /opt/quarto -xvzf quarto-1.5.56-linux-amd64.tar.gz && \
+    rm quarto-1.5.56-linux-amd64.tar.gz && \
+    \
+    # Clean up
+    apt clean
+
+RUN mkdir -p /etc/services.d/shiny-server && \
+    echo '#!/bin/bash\nexec shiny-server' > /etc/services.d/shiny-server/run && \
+    chmod +x /etc/services.d/shiny-server/run
+
+# Ensure the shiny user can access the mounted app directory
+RUN mkdir -p /srv/shiny-server && \
+    chown -R shiny:shiny /srv/shiny-server
+
+# Create a shared group and add both users to it
+RUN groupadd shared && \
+    usermod -aG shared shiny && \
+    usermod -aG shared rstudio
+
+# Change the group ownership of the mounted folder and set permissions
+RUN chgrp -R shared /srv/shiny-server && \
+    chmod -R 775 /srv/shiny-server
+
+EXPOSE 8787 3838
+
+# Set default command 
+CMD /init
