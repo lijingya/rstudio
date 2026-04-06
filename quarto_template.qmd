@@ -1,0 +1,89 @@
+---
+title: "PROJECT TITLE"
+subtitle: "PROJECT SUBTITLE"
+author:
+  - Author One
+  - Author Two
+  # add / remove authors as needed
+
+title-block-style: default
+title-block-banner: "#FFFFFF"
+title-block-banner-color: "#D9A50F"
+
+format:
+  html:
+    embed-resources: true
+    standalone: true
+    smooth-scroll: true
+    df-print: paged
+    toc: true
+    toc-location: left
+    theme:
+      light: cosmo
+      dark: darkly
+    highlight-style: github
+    code-block-bg: true
+    code-block-border-left: "#D9A50F"
+    code-tools:
+      source: true
+      toggle: false
+      caption: none
+    grid:
+      sidebar-width: 400px
+      body-width: 2000px
+      margin-width: 100px
+      gutter-width: 1.5rem
+
+editor: source
+
+params:
+  dir_out: "PATH/TO/OUTPUT"
+  se_file: "PATH/TO/SE_FILE"
+---
+
+
+# Setup
+
+## Parameters
+
+```{r}
+#| code-fold: true
+#| echo: true
+#| warning: true
+invisible(lapply(names(params), function(x) {
+  message(
+    sprintf("%s : %s", x, ifelse(
+      !is.null(params[[x]]) & length(params[[x]]) > 1,
+      paste(params[[x]], collapse = ","),
+      ifelse(is.null(params[[x]]), "NULL", params[[x]])
+    ))
+  )
+}))
+
+for (x in names(params)) {
+  assign(x, params[[x]])
+}
+
+if (!file.exists(dir_out)) {
+  dir.create(dir_out, recursive = TRUE)
+}
+```
+
+## Required Libraries and Dependencies
+
+```{r,message = FALSE,warning = FALSE}
+library(xxx)
+```
+
+# Data
+
+## Summarized Experiment
+```{r}
+# Data
+```
+
+
+# Session information
+```{R session_info}
+sessionInfo()
+```
